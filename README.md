@@ -16,15 +16,15 @@ Make sure you have the following installed before running the app:
 
 1. Clone this repository to your local machine:
 
-git clone <repository_url>
-cd <project_directory>
-virtualenv venv
+`git clone <repository_url>`
+`cd <project_directory>`
+`virtualenv venv`
 
 2. Activate your virtual environment
-### venv\Scripts\activate
+### `venv\Scripts\activate`
 
 3. Install dependencies
-### pip install -r requirements.txt
+### `pip install -r requirements.txt`
 
 4. Running the app
-### python server.py
+### `python server.py`
