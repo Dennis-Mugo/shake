@@ -80,7 +80,7 @@ class PDFHandler():
         In the answer try to provide as much text as possible from "context" section in the source document context. The response should be as clear and detailed.
         The answer should not start with the word response.
         The answer should be in simple-to-understand language.
-        If the answer is not found in the context, kindly state "I don't know." Don't try to make up an answer.
+        If the answer is not found in the context, kindly state "Sorry, I cannot provide a response from the context provided." Don't try to make up an answer.
 
         CONTEXT: {context}
 
@@ -103,7 +103,14 @@ class PDFHandler():
     def process_query(self, query):
         result = self.chain(query)
         print(result)
-        return result["result"]
+        source_docs = result["source_documents"]
+        formated_source_docs = []
+        for doc in source_docs:
+            obj = {}
+            obj["pageContent"] = doc.page_content
+            obj["metadata"] = doc.metadata
+            formated_source_docs.append(obj)
+        return {"answer": result["result"], "sourceDocuments": formated_source_docs}
 
     def create_chain(self):
         self.load_llm()
