@@ -21,10 +21,10 @@ cd <project_directory>
 virtualenv venv
 
 2. Activate your virtual environment
-venv\Scripts\activate
+### venv\Scripts\activate
 
 3. Install dependencies
-pip install -r requirements.txt
+### pip install -r requirements.txt
 
 4. Running the app
-python server.py
+### python server.py
