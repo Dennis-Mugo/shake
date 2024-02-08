@@ -16,13 +16,11 @@ Make sure you have the following installed before running the app:
 
 1. Clone this repository to your local machine:
 
-```bash
 git clone <repository_url>
 cd <project_directory>
 virtualenv venv
 
 2. Activate your virtual environment
-```bash
 venv\Scripts\activate
 
 3. Install dependencies
