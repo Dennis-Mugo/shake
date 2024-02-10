@@ -8,12 +8,16 @@ from rags.word_handler import WordHandler
 from rags.powerpoint_handler import PowerPointHandler
 
 import json
+import pickle
+from uuid import uuid4
+
 
 from rags.yt_handler import YTHandler
 
 app = Flask(__name__)
-CORS(app, origins=["http://localhost"])
+CORS(app, origins=["http://localhost:3000"], supports_credentials=True)
 
+app.config["SESSION_PERMANENT"] = True
 app.config['SESSION_TYPE'] = 'filesystem'
 Session(app)
 
@@ -42,16 +46,28 @@ def learn():
         rag_app = WebHandler(file_url)
         
     chain = rag_app.create_chain()
-    session["rag_app"] = rag_app
-    return jsonify({"result": "success"} if not chain else chain)
+
+    chain_id = str(uuid4())
+    pickle_file = f"chains/{chain_id}.pkl"
+    with open(pickle_file, "wb") as f:
+        pickle.dump(rag_app, f)
+    result = {"result": "success"} if not chain else chain
+    result["chainId"] = chain_id
+    return jsonify(result)
 
 def process_query():
     body = json.loads(request.data)
     query = body["query"]
+    rag_app_id = body.get("chainId", False)
 
-    rag_app = session.get("rag_app", False)
+    if not rag_app_id:
+        return {"Error": "chainId is required!"}
+    chain_path = f"chains/{rag_app_id}.pkl" 
+    with open(chain_path, "rb") as f:
+        rag_app = pickle.load(f)
+
     if not rag_app:
-        return {"Error": "No data trained"}
+        return {"Error": "No data trained!"}
     result = rag_app.process_query(query)
     return jsonify(result)
 
