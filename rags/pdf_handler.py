@@ -102,7 +102,7 @@ class PDFHandler():
 
     def process_query(self, query):
         result = self.chain(query)
-        print(result)
+        # print(result)
         source_docs = result["source_documents"]
         formated_source_docs = []
         for doc in source_docs:
