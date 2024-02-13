@@ -1,4 +1,5 @@
 from flask import Flask, request, jsonify, session
+# from waitress import serve
 from flask_cors import CORS
 from flask_session import Session
 from rags.pdf_handler import PDFHandler
@@ -6,20 +7,20 @@ from rags.text_handler import TextHandler
 from rags.web_handler import WebHandler
 from rags.word_handler import WordHandler
 from rags.powerpoint_handler import PowerPointHandler
+from rags.yt_handler import YTHandler
 
 import json
 import pickle
 from uuid import uuid4
 
 
-from rags.yt_handler import YTHandler
 
 app = Flask(__name__)
-CORS(app, origins=["http://localhost:3000"], supports_credentials=True)
+CORS(app, origins=["http://localhost:3000"])
 
-app.config["SESSION_PERMANENT"] = True
-app.config['SESSION_TYPE'] = 'filesystem'
-Session(app)
+# app.config["SESSION_PERMANENT"] = True
+# app.config['SESSION_TYPE'] = 'filesystem'
+# Session(app)
 
 
 
@@ -76,4 +77,5 @@ app.add_url_rule("/query", "process_query", process_query, methods=["POST"])
     
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    pass
+    # app.run(debug=False)
