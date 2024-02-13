@@ -32,9 +32,12 @@ class YTHandler():
 
     def load_data(self):
         print("Loading data")
-        loader = YoutubeLoader.from_youtube_url(self.file_url, add_video_info=True)
-        self.data = loader.load()
-        # print("data length", len(data))
+        self.data = []
+        for url in self.file_url:
+            loader = YoutubeLoader.from_youtube_url(url, add_video_info=True)
+            content = loader.load()
+            self.data += content
+        print("data length", len(self.data))
 
     def split_data(self):
         print("Splitting data")
@@ -94,6 +97,19 @@ class YTHandler():
                                     return_source_documents=True,
                                     chain_type_kwargs=chain_type_kwargs
                                     )
+        
+    def format_metadata(self, docs):
+        def id_to_doc(id):
+            for doc in docs:
+                if doc.metadata["source"] == id:
+                    return doc.metadata
+                
+        ids = map(lambda x : x.metadata["source"], docs)
+        ids = list(ids)
+        unique_ids = list(set(ids))
+        unique_docs = list(map(id_to_doc, unique_ids))
+
+        return unique_docs
 
     def process_query(self, query):
         result = self.chain(query)
@@ -105,7 +121,14 @@ class YTHandler():
             obj["pageContent"] = doc.page_content
             # obj["metadata"] = doc.metadata
             formated_source_docs.append(obj)
-        return {"answer": result["result"], "sourceDocuments": formated_source_docs}
+        return {
+            "answer": result["result"], 
+            "sourceDocuments": formated_source_docs, 
+            "metadata": self.format_metadata(source_docs)
+                }
+    
+    def get_metadata(self, doc):
+        return doc.metadata
 
     def create_chain(self):
         self.load_llm()
@@ -113,4 +136,4 @@ class YTHandler():
         self.split_data()
         self.embed_data()
         self.get_chain()
-        return self.data[0].metadata
+        return {"metadata": list(map(self.get_metadata, self.data))}
