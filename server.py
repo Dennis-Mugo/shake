@@ -77,5 +77,4 @@ app.add_url_rule("/query", "process_query", process_query, methods=["POST"])
     
 
 if __name__ == '__main__':
-    pass
-    # app.run(debug=False)
+    app.run(debug=True)
