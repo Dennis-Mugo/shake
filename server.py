@@ -1,7 +1,7 @@
 from flask import Flask, request, jsonify, session
 # from waitress import serve
 from flask_cors import CORS
-from flask_session import Session
+# from flask_session import Session
 from rags.pdf_handler import PDFHandler
 from rags.text_handler import TextHandler
 from rags.web_handler import WebHandler
@@ -16,7 +16,7 @@ from uuid import uuid4
 
 
 app = Flask(__name__)
-CORS(app, origins=["http://localhost:3000"])
+CORS(app, origins=["http://localhost:3000", "https://bizbanter.vercel.app"])
 
 # app.config["SESSION_PERMANENT"] = True
 # app.config['SESSION_TYPE'] = 'filesystem'
