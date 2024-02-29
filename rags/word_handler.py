@@ -12,6 +12,9 @@ from langchain.vectorstores import FAISS
 from langchain.chains import RetrievalQA
 from langchain.prompts import PromptTemplate
 
+from utils.embeddings_handler import EmbeddingsHandler
+from utils.llm_handler import LLMHandler
+
 load_dotenv()
 
 class WordHandler():
@@ -21,12 +24,7 @@ class WordHandler():
 
     def load_llm(self):
         print("Loading llm")
-        self.llm = ChatOpenAI(
-            openai_api_key=self.openai_api_key,
-            model_name="gpt-3.5-turbo",
-            temperature=0.9,
-            max_tokens=500,
-        )
+        self.llm = LLMHandler().get_llm()
 
     def load_data(self):
         print("Loading data")
@@ -53,7 +51,7 @@ class WordHandler():
 
     def embed_data(self):
         print("Embedding data")
-        embeddings = OpenAIEmbeddings()
+        embeddings = EmbeddingsHandler().get_embeddings_model()
 
         # ASTRA DB stuff
         # db_token = os.getenv("ASTRADB_TOKEN")
@@ -99,6 +97,8 @@ class WordHandler():
                                     chain_type_kwargs=chain_type_kwargs
                                     )
 
+        return self.chain
+
     def process_query(self, query):
         result = self.chain(query)
         # print(result)
@@ -116,4 +116,4 @@ class WordHandler():
         self.load_data()
         self.split_data()
         self.embed_data()
-        self.get_chain()
+        return self.get_chain()

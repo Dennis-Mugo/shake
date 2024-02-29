@@ -13,6 +13,8 @@ from langchain.vectorstores import FAISS
 from langchain.chains import RetrievalQA
 from langchain.prompts import PromptTemplate
 
+from utils.llm_handler import LLMHandler
+
 load_dotenv()
 
 class TextHandler():
@@ -22,12 +24,8 @@ class TextHandler():
 
     def load_llm(self):
         print("Loading llm")
-        self.llm = ChatOpenAI(
-            openai_api_key=self.openai_api_key,
-            model_name="gpt-3.5-turbo",
-            temperature=0.9,
-            max_tokens=500,
-        )
+        llm_loader = LLMHandler()
+        self.llm = llm_loader.get_llm() 
 
     def load_data(self):
         print("Loading data")

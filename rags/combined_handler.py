@@ -17,19 +17,22 @@ from langchain.chains import RetrievalQA
 from langchain.prompts import PromptTemplate
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain.llms import HuggingFaceHub
+from rags.pdf_handler import PDFHandler
+from rags.web_handler import WebHandler
+from rags.word_handler import WordHandler
+from rags.yt_handler import YTHandler
 
 from utils.embeddings_handler import EmbeddingsHandler
 from utils.llm_handler import LLMHandler
-from utils.url_shortener import URLShortener
 
 
 from langchain.document_loaders import OnlinePDFLoader
 
 load_dotenv()
 
-class PDFHandler():
-    def __init__(self, file_urls):
-        self.file_urls = file_urls
+class CombinedHandler():
+    def __init__(self, file_objs):
+        self.file_objs = file_objs
         self.openai_api_key = os.getenv("OPENAI_API_KEY")
         self.google_api_key = os.getenv("GOOGLE_API_KEY")
 
@@ -57,25 +60,41 @@ class PDFHandler():
         # )
         # print(type(self.llm))
 
+    def sort_files(self):
+        # web, pdf, yt, docx
+        types = ["web", "pdf", "yt", "docx"]
+
+        # res = {type: [] for type in types}
+        res = []
+        for obj in self.file_objs:
+            file_type = obj.get("file_type")
+            if file_type == "pdf":
+                handler = PDFHandler(obj["file_urls"])
+                # res["pdf"].append(handler)
+                res.append(handler)
+            elif file_type == "docx":
+                handler = WordHandler(obj["file_urls"])
+                # res["docx"].append(handler)
+                res.append(handler)
+            elif file_type == 'web':
+                handler = WebHandler(obj["file_urls"])
+                # res['web'].append(handler)
+                res.append(handler)
+            elif file_type == 'yt':
+                handler = YTHandler(obj["file_urls"])
+                # res['yt'].append(handler)
+                res.append(handler)
+        return res
+
+
     def load_data(self):
-        print("Loading pdf data")
-        file_name = str(uuid4()) + ".pdf"
-        # response = requests.get(self.file_url)
-        # with open(file_name, 'wb') as f:
-        #     f.write(response.content)
+        print("Loading data")
+        sorted_handlers = self.sort_files()
         self.data = []
-        for url in self.file_urls:
-            short_url = URLShortener().get_short_url(url)
-            loader = OnlinePDFLoader(short_url)
-            data = loader.load()
+        for handler in sorted_handlers:
+            data = handler.load_data()
             self.data += data
-        print("pdf data:", len(self.data))
-        return self.data
-        
-        
-        if os.path.exists(file_name):
-            os.remove(file_name)
-        # print("data length", len(data))
+        print("data length", len(self.data))
 
     def split_data(self):
         print("Splitting data")

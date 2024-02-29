@@ -1,4 +1,5 @@
 .env
 global_requirements.txt
 main_requirements.txt
+firebase_config/
 # chains

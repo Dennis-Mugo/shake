@@ -31,9 +31,10 @@ class WebHandler():
         )
 
     def load_data(self):
-        print("Loading data")
+        print("Loading web data")
         loader = UnstructuredURLLoader(urls=self.file_urls)
         self.data = loader.load()
+        return self.data
         # print("data length", len(data))
 
     def split_data(self):
