@@ -1,5 +1,10 @@
 from firebase_config.config import bucket
 import os
+import cloudpickle as cp
+from urllib.request import urlopen
+from dotenv import load_dotenv
+
+load_dotenv()
 
 class ChainHandler:
     def __init__(self, chain_path, chain_name):
@@ -17,3 +22,15 @@ class ChainHandler:
         if os.path.exists(self.chain_path):
             os.remove(self.chain_path)
         return self.url
+    
+    @staticmethod
+    def url_from_id(chain_id):
+        if not chain_id:
+            return False
+        url = f'https://storage.googleapis.com/chatify--chat.appspot.com/bizbanter_chains/{chain_id}.pkl'
+        return url
+    
+    @staticmethod
+    def download_chain(url):
+        chain = cp.load(urlopen(url))
+        return chain

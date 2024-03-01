@@ -48,16 +48,7 @@ class CombinedHandler():
         # )
         # self.llm = GooglePalm(temperature=0.8)
         # self.llm = ChatGoogleGenerativeAI(model="gemini-pro", google_api_key=self.google_api_key, temperature=0.2,convert_system_message_to_human=True)
-        # self.llm = HuggingFaceHub(
-        #     repo_id="mistralai/Mistral-7B-Instruct-v0.2",
-        #     huggingfacehub_api_token="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",
-        #     model_kwargs={
-        #         "temperature":0.7,
-        #         # "top_p": 0.5,
-        #         # "do_sample": True,
-        #         # "max_new_tokens":1024
-        #     },
-        # )
+        
         # print(type(self.llm))
 
     def sort_files(self):
@@ -161,8 +152,8 @@ class CombinedHandler():
                                     )
         
         
-
-    def process_query(self, query, chain):
+    @staticmethod
+    def process_query(query, chain):
         # result = self.chain(query)
         result = chain(query)
         # print(result)

@@ -37,23 +37,10 @@ def learn():
     body = json.loads(request.data)
     # file_type = body["file_type"]
     file_objs = body["file_objs"]
-    rag_app = CombinedHandler(file_objs)
-    # if file_type == "pdf":
-    #     rag_app = PDFHandler(file_urls)
-    # elif file_type == "docx":
-    #     rag_app = WordHandler(file_urls)
-    # elif file_type == "pptx":
-    #     rag_app = PowerPointHandler(file_urls)
-    # elif file_type == 'txt':
-    #     rag_app = TextHandler(file_urls)
-    # elif file_type == "yt":
-    #     rag_app = YTHandler(file_urls)
-    # elif file_type == "web":
-    #     rag_app = WebHandler(file_urls)
-        
+    rag_app = CombinedHandler(file_objs)    
     chain = rag_app.create_chain()
-    chain_id = "abc"
-    # chain_id = str(uuid4())
+    # chain_id = "abc"
+    chain_id = str(uuid4())
     pickle_file = f"chains/{chain_id}.pkl"
     
     with open(pickle_file, "wb") as f:
@@ -72,23 +59,27 @@ def learn():
 def process_query():
     body = json.loads(request.data)
     query = body["query"]
-    rag_app_id = body.get("chainId", False)
+    chain_id = body.get("chainId", False)
+    chain_url = body.get("chainUrl", ChainHandler.url_from_id(chain_id))
+    if not (chain_url and query):
+        return {"Error": "'query' or 'chainUrl' field is missing!"}
+    try:
+        chain = ChainHandler.download_chain(chain_url)
+    except:
+        return {"Error": "An error occured!"}
+
+    # if not rag_app_id:
+    #     return {"Error": "chainId is required!"}
+    # chain_path = f"chains/{rag_app_id}.pkl" 
+    # with open(chain_path, "rb") as f:
+    #     rag_app = pickle.load(f)
     
 
-    if not rag_app_id:
-        return {"Error": "chainId is required!"}
-    chain_path = f"chains/{rag_app_id}.pkl" 
-    with open(chain_path, "rb") as f:
-        rag_app = pickle.load(f)
-    
-
-    if not rag_app:
-        return {"Error": "No data trained!"}
+    # if not rag_app:
+    #     return {"Error": "No data trained!"}
     
     # result = rag_app.process_query(query)
-    handler = PDFHandler("g")
-    result = handler.process_query(query, rag_app)
-    
+    result = CombinedHandler.process_query(query, chain)
     return jsonify(result)
 
 app.add_url_rule("/upload", "learn", learn, methods=["POST"])
