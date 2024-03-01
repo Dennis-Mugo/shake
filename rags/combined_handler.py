@@ -4,18 +4,18 @@ from langchain.llms import GooglePalm
 from dotenv import load_dotenv
 from uuid import uuid4
 from langchain_google_genai import GoogleGenerativeAIEmbeddings
-from langchain_google_genai import GoogleGenerativeAI
+# from langchain_google_genai import GoogleGenerativeAI
 import requests
 
 from langchain.document_loaders import PyPDFLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.embeddings import OpenAIEmbeddings
-from langchain_community.vectorstores import AstraDB as LangAstraDB
+# from langchain_community.vectorstores import AstraDB as LangAstraDB
 from astrapy.db import AstraDB
 from langchain.vectorstores import FAISS
 from langchain.chains import RetrievalQA
 from langchain.prompts import PromptTemplate
-from langchain_google_genai import ChatGoogleGenerativeAI
+# from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain.llms import HuggingFaceHub
 from rags.pdf_handler import PDFHandler
 from rags.web_handler import WebHandler

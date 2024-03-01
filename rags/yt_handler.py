@@ -8,8 +8,8 @@ from langchain.document_loaders import YoutubeLoader
 
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.embeddings import OpenAIEmbeddings
-from langchain_community.vectorstores import AstraDB as LangAstraDB
-from astrapy.db import AstraDB
+# from langchain_community.vectorstores import AstraDB as LangAstraDB
+# from astrapy.db import AstraDB
 from langchain.vectorstores import FAISS
 from langchain.chains import RetrievalQA
 from langchain.prompts import PromptTemplate

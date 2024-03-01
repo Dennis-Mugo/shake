@@ -10,12 +10,12 @@ import requests
 from langchain.document_loaders import PyPDFLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.embeddings import OpenAIEmbeddings
-from langchain_community.vectorstores import AstraDB as LangAstraDB
-from astrapy.db import AstraDB
+
+# from astrapy.db import AstraDB
 from langchain.vectorstores import FAISS
 from langchain.chains import RetrievalQA
 from langchain.prompts import PromptTemplate
-from langchain_google_genai import ChatGoogleGenerativeAI
+# from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain.llms import HuggingFaceHub
 
 from utils.embeddings_handler import EmbeddingsHandler
