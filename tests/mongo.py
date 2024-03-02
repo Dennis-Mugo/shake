@@ -2,7 +2,7 @@ from dotenv import load_dotenv
 import pprint
 import os
 from pymongo import MongoClient
-
+import random
 
 load_dotenv()
 
@@ -102,9 +102,9 @@ def replace_doc(person_id):
     from bson.objectid import ObjectId
     _id = ObjectId(person_id)
     new_doc = {
-        "first_name": "not Michael",
-        "last_name": "not Gacho",
-        "age": 230
+        "first_name": "Michael",
+        "last_name": "Gacho",
+        "age": random.randint(5, 200)
     }
     person_collection.replace_one({"_id": _id}, new_doc)
 
@@ -115,5 +115,6 @@ def delete_doc_by_id(person_id):
     person_collection.delete_one({"_id": _id})
 
 #65e1b8deb51a72d5949aee25
-delete_doc_by_id("65e1b8deb51a72d5949aee25")
+# delete_doc_by_id("65e1b8deb51a72d5949aee25")
+replace_doc("65e1b8deb51a72d5949aee25")
 

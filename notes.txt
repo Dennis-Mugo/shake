@@ -6,3 +6,22 @@ body = {
   "query": "When did production of the first land cruiser begin?",
   "chainId": "abc"
 }
+
+
+{
+ "file_objs": [
+    {"file_type": "pdf", "file_urls": ["https://firebasestorage.googleapis.com/v0/b/chatify--chat.appspot.com/o/bizbanter%2Flecture%209.pdf?alt=media&token=8fde77fd-fc9c-4db6-b590-30b3c720a5a8", "https://firebasestorage.googleapis.com/v0/b/chatify--chat.appspot.com/o/bizbanter%2F4491d817-7d47-48d0-8da9-0208c9589895LESSON%20THREE.pdf?alt=media&token=0ddcc33d-3558-4b68-a233-8ff04258ac97"]}, 
+    {"file_type": "web", "file_urls": ["https://www.moneycontrol.com/news/business/banks/hdfc-bank-re-appoints-sanmoy-chakrabarti-as-chief-risk-officer-11259771.html"]}],
+  "query": "For how long has chakrabarti been re-appointed?",
+  "chainId": "53290f17-5289-4b6b-813f-0a9b13e1333f"
+  
+}
+
+
+deploy checklist
+==============================
+pip freeze > requirements.txt
+remove pywin32 from requirements.txt
+check path to credentials.json
+check chains folder exists
+remove pycache folders

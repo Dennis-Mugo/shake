@@ -18,8 +18,8 @@ from utils.llm_handler import LLMHandler
 load_dotenv()
 
 class WordHandler():
-    def __init__(self, file_url):
-        self.file_url = file_url
+    def __init__(self, file_urls):
+        self.file_urls = file_urls
         self.openai_api_key = os.getenv("OPENAI_API_KEY")
 
     def load_llm(self):
@@ -27,16 +27,20 @@ class WordHandler():
         self.llm = LLMHandler().get_llm()
 
     def load_data(self):
-        print("Loading data")
-        response = requests.get(self.file_url)
-        file_name = str(uuid4()) + ".docx"
-        with open(file_name, 'wb') as f:
-            f.write(response.content)
-        loader = UnstructuredWordDocumentLoader(file_name)
-        self.data = loader.load()
-        if os.path.exists(file_name):
-            os.remove(file_name)
-        # print("data length", len(data))
+        print("Loading docx data")
+        self.data = []
+        for url in self.file_urls:
+            response = requests.get(url)
+            file_name = str(uuid4()) + ".docx"
+            with open(file_name, 'wb') as f:
+                f.write(response.content)
+            loader = UnstructuredWordDocumentLoader(file_name)
+            self.data += loader.load()
+            if os.path.exists(file_name):
+                os.remove(file_name)
+        print("docx data:", len(self.data))
+        return self.data
+        
 
     def split_data(self):
         print("Splitting data")

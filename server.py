@@ -15,6 +15,7 @@ import pickle
 from uuid import uuid4
 
 from utils.chain_handler import ChainHandler
+import tests.mongo
 
 
 

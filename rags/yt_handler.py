@@ -31,13 +31,14 @@ class YTHandler():
         )
 
     def load_data(self):
-        print("Loading data")
+        print("Loading youtube data")
         self.data = []
         for url in self.file_url:
             loader = YoutubeLoader.from_youtube_url(url, add_video_info=True)
             content = loader.load()
             self.data += content
-        print("data length", len(self.data))
+        print("yt data length", len(self.data))
+        return self.data
 
     def split_data(self):
         print("Splitting data")
