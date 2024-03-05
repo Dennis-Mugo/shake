@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify, session
 # from waitress import serve
 from flask_cors import CORS
+from firebase_config.user_handler import User
 from rags.combined_handler import CombinedHandler
 # from flask_session import Session
 from rags.pdf_handler import PDFHandler
@@ -15,7 +16,7 @@ import pickle
 from uuid import uuid4
 
 from utils.chain_handler import ChainHandler
-import tests.mongo
+
 
 
 
@@ -83,8 +84,19 @@ def process_query():
     result = CombinedHandler.process_query(query, chain)
     return jsonify(result)
 
+def handle_signin():
+    body = json.loads(request.data)
+    user_id = body["userId"]
+    date_created = body["dateCreated"]
+    user = User(user_id, "uid", date_created)
+    if user.exists():
+        res = user.signin()
+        return jsonify(res)
+    return jsonify({"Error": "User does not exist!"})
+
 app.add_url_rule("/upload", "learn", learn, methods=["POST"])
 app.add_url_rule("/query", "process_query", process_query, methods=["POST"])
+app.add_url_rule("/signin", "handle_signin", handle_signin, methods=["POST"])
     
 
 if __name__ == '__main__':
