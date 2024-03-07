@@ -38,7 +38,12 @@ def hello():
 def learn():
     body = json.loads(request.data)
     # file_type = body["file_type"]
-    file_objs = body["file_objs"]
+    file_objs = body["fileObjs"]
+    file_details = body['fileDetails']
+    user_id = body['userId']
+    timestamp = body['dateCreated']
+
+
     rag_app = CombinedHandler(file_objs)    
     chain = rag_app.create_chain()
     # chain_id = "abc"
@@ -50,6 +55,7 @@ def learn():
 
     chain_storage = ChainHandler(pickle_file, f'{chain_id}.pkl')
     chain_url = chain_storage.upload_chain()
+    chain_storage.save_chain(user_id, chain_id, file_details, timestamp)
         
     result = {
         "result": "success",
@@ -92,11 +98,20 @@ def handle_signin():
     if user.exists():
         res = user.signin()
         return jsonify(res)
-    return jsonify({"Error": "User does not exist!"})
+    return jsonify({"error": "Account does not exist!"})
+
+def get_chain_obj():
+    body = json.loads(request.data)
+    user_id = body["userId"]
+    chain_id = body["chainId"]
+
+    result = ChainHandler.get_chain_obj(chain_id, user_id)
+    return jsonify(result)
 
 app.add_url_rule("/upload", "learn", learn, methods=["POST"])
 app.add_url_rule("/query", "process_query", process_query, methods=["POST"])
 app.add_url_rule("/signin", "handle_signin", handle_signin, methods=["POST"])
+app.add_url_rule("/chain", "get_chain_obj", get_chain_obj, methods=["POST"])
     
 
 if __name__ == '__main__':

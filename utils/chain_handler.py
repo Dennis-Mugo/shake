@@ -3,6 +3,7 @@ import os
 import cloudpickle as cp
 from urllib.request import urlopen
 from dotenv import load_dotenv
+from tests.mongo import client
 
 load_dotenv()
 
@@ -34,3 +35,25 @@ class ChainHandler:
     def download_chain(url):
         chain = cp.load(urlopen(url))
         return chain
+    
+    
+    def save_chain(self, user_id, chain_id, fileObjs, timestamp):
+        obj = {
+            "_id": chain_id,
+            "userId": user_id,
+            "chainId": chain_id,
+            "dateCreated": timestamp,
+            "files": fileObjs
+        }
+        chain_collection = client.banter.chains
+        chain_collection.insert_one(obj)
+
+    @staticmethod
+    def get_chain_obj(chain_id, user_id):
+        chain_collection = client.banter.chains
+        chain_obj = chain_collection.find_one({"chainId": chain_id})
+        if not chain_obj:
+            return {"showError": "Invalid request!"}
+        if chain_obj["userId"] != user_id:
+            return {"showError": "Access denied!"}
+        return chain_obj

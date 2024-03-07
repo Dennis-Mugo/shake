@@ -56,8 +56,9 @@ class PDFHandler():
         #     f.write(response.content)
         self.data = []
         for url in self.file_urls:
-            short_url = URLShortener().get_short_url(url)
-            loader = OnlinePDFLoader(short_url)
+            # short_url = URLShortener().get_short_url(url)
+            # loader = OnlinePDFLoader(short_url)
+            loader = OnlinePDFLoader(url)
             data = loader.load()
             self.data += data
         print("pdf data:", len(self.data))
