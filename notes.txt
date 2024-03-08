@@ -26,3 +26,7 @@ check path to credentials.json
 check chains folder exists
 remove pycache folders
 cloud storage location of chains.pkl 
+Remove url_shortener from pdfHandler
+Check llm model
+Check embeddings model
+Check .gitignore

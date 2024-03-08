@@ -13,12 +13,11 @@ from rags.yt_handler import YTHandler
 
 import json
 import pickle
+import pprint
 from uuid import uuid4
 
 from utils.chain_handler import ChainHandler
-
-
-
+from utils.db_handler import DBHandler
 
 
 app = Flask(__name__)
@@ -69,25 +68,24 @@ def process_query():
     query = body["query"]
     chain_id = body.get("chainId", False)
     chain_url = body.get("chainUrl", ChainHandler.url_from_id(chain_id))
+    question_obj = body["questionObj"]
+    user_id = body["userId"]
+    
+
     if not (chain_url and query):
-        return {"Error": "'query' or 'chainUrl' field is missing!"}
+        return {"error": "'query' or 'chainUrl' field is missing!"}
     try:
         chain = ChainHandler.download_chain(chain_url)
-    except:
-        return {"Error": "An error occured!"}
+    except Exception as e:
+        print(e)
+        return {"error": "An error occured!"}
 
-    # if not rag_app_id:
-    #     return {"Error": "chainId is required!"}
-    # chain_path = f"chains/{rag_app_id}.pkl" 
-    # with open(chain_path, "rb") as f:
-    #     rag_app = pickle.load(f)
-    
-
-    # if not rag_app:
-    #     return {"Error": "No data trained!"}
-    
-    # result = rag_app.process_query(query)
     result = CombinedHandler.process_query(query, chain)
+
+    db = DBHandler()
+    db.save_chat_question(question_obj)
+    result = db.save_chat_response(result, user_id, chain_id)
+
     return jsonify(result)
 
 def handle_signin():

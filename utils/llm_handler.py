@@ -16,7 +16,7 @@ class LLMHandler:
 
     
     def get_llm(self):
-        self.llm = self.huggingface_llm()
+        self.llm = self.open_ai_llm()
         return self.llm
     
     def huggingface_llm(self):

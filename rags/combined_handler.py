@@ -156,7 +156,6 @@ class CombinedHandler():
     def process_query(query, chain):
         # result = self.chain(query)
         result = chain(query)
-        # print(result)
         source_docs = result["source_documents"]
         formated_source_docs = []
         for doc in source_docs:

@@ -1,6 +1,6 @@
 
 from firebase_config.config import auth
-from tests.mongo import client
+from utils.mongo_config import client
 
 class User():
     def __init__(self, value, identifier, timestamp):

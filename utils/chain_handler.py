@@ -3,7 +3,7 @@ import os
 import cloudpickle as cp
 from urllib.request import urlopen
 from dotenv import load_dotenv
-from tests.mongo import client
+from utils.mongo_config import client
 
 load_dotenv()
 
@@ -57,3 +57,5 @@ class ChainHandler:
         if chain_obj["userId"] != user_id:
             return {"showError": "Access denied!"}
         return chain_obj
+    
+    

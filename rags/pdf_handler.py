@@ -50,23 +50,32 @@ class PDFHandler():
 
     def load_data(self):
         print("Loading pdf data")
-        file_name = str(uuid4()) + ".pdf"
-        # response = requests.get(self.file_url)
-        # with open(file_name, 'wb') as f:
-        #     f.write(response.content)
         self.data = []
-        for url in self.file_urls:
+        for url_obj in self.file_urls:
+            url = url_obj['url']
+            file_id = url_obj["fileId"]
             # short_url = URLShortener().get_short_url(url)
             # loader = OnlinePDFLoader(short_url)
-            loader = OnlinePDFLoader(url)
+
+            # loader = OnlinePDFLoader(url)
+
+            file_name = file_id + ".pdf"
+            response = requests.get(url)
+            with open(file_name, 'wb') as f:
+                f.write(response.content)
+            loader = PyPDFLoader(file_name)
             data = loader.load()
+
             self.data += data
+            if os.path.exists(file_name):
+                os.remove(file_name)
+
+            
         print("pdf data:", len(self.data))
         return self.data
         
         
-        if os.path.exists(file_name):
-            os.remove(file_name)
+        
         # print("data length", len(data))
 
     def split_data(self):
