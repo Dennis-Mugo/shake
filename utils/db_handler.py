@@ -1,6 +1,9 @@
 from uuid import uuid4 as v4
 from utils.mongo_config import client
 from time import time
+import pprint
+
+printer = pprint.PrettyPrinter()
 
 class DBHandler():
     def __init__(self):
@@ -27,3 +30,12 @@ class DBHandler():
         }
         self.chat_collection.insert_one(obj)
         return obj
+    
+    def get_chats(self, user_id, chain_id, secure=False):
+        if secure:
+            chats = self.chat_collection.find({"userId": user_id, "chainId": chain_id})
+        else:
+            chats = self.chat_collection.find({"chainId": chain_id})
+        chats_list = [chat for chat in chats]
+
+        return chats_list

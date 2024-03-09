@@ -106,10 +106,22 @@ def get_chain_obj():
     result = ChainHandler.get_chain_obj(chain_id, user_id)
     return jsonify(result)
 
+def get_chats():
+    args = request.args
+    user_id = args["userId"]
+    chain_id = args["chainId"]
+
+    db_handler = DBHandler()
+    result = db_handler.get_chats(user_id, chain_id)
+
+    return jsonify(result)
+    
+
 app.add_url_rule("/upload", "learn", learn, methods=["POST"])
 app.add_url_rule("/query", "process_query", process_query, methods=["POST"])
 app.add_url_rule("/signin", "handle_signin", handle_signin, methods=["POST"])
 app.add_url_rule("/chain", "get_chain_obj", get_chain_obj, methods=["POST"])
+app.add_url_rule("/chats", "get_chats", get_chats, methods=["GET"])
     
 
 if __name__ == '__main__':
