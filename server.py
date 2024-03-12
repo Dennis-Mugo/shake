@@ -115,6 +115,17 @@ def get_chats():
     result = db_handler.get_chats(user_id, chain_id)
 
     return jsonify(result)
+
+def get_uploads():
+    body = json.loads(request.data)
+    user_id = body.get("userId", False)
+    if not user_id:
+        return jsonify({"error": "userId is required"})
+    
+    db = DBHandler()
+    result = db.fetch_uploads(user_id)
+
+    return jsonify(result)
     
 
 app.add_url_rule("/upload", "learn", learn, methods=["POST"])
@@ -122,6 +133,7 @@ app.add_url_rule("/query", "process_query", process_query, methods=["POST"])
 app.add_url_rule("/signin", "handle_signin", handle_signin, methods=["POST"])
 app.add_url_rule("/chain", "get_chain_obj", get_chain_obj, methods=["POST"])
 app.add_url_rule("/chats", "get_chats", get_chats, methods=["GET"])
+app.add_url_rule("/uploads", "get_uploads", get_uploads, methods=["POST"])
     
 
 if __name__ == '__main__':

@@ -17,6 +17,11 @@ body = {
   
 }
 
+dev checklist
+==============================================================================
+change path to credentials.json to firebase_config/credentials.json
+change mongodb storage collection for chains from chains to devChains
+
 
 deploy checklist
 ==============================
@@ -26,6 +31,7 @@ check path to credentials.json
 check chains folder exists
 remove pycache folders
 cloud storage location of chains.pkl 
+change mongodb storage collection for chains from devChains to chains
 Remove url_shortener from pdfHandler
 Check llm model
 Check embeddings model

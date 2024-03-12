@@ -39,3 +39,37 @@ class DBHandler():
         chats_list = [chat for chat in chats]
 
         return chats_list
+    
+    def get_last_chat(self, chain_id):
+        # chat = self.chat_collection.find(
+        #     {"chainId", chain_id}
+        #     # sort=[( 'dateCreated', pymongo.DESCENDING )]
+        #     ).limit(1)
+        res = self.chat_collection.find({"chainId": chain_id, "role": "user"}).limit(1).sort({"$natural": -1})
+        res = list(res)
+        last_human_message = res[0] if len(res) else False
+
+        res = self.chat_collection.find({"chainId": chain_id, "role": "assistant"}).limit(1).sort({"$natural": -1})
+        res = list(res)
+        last_assistant_message = res[0] if len(res) else False
+        return {
+            "assistant": last_assistant_message,
+            "user": last_human_message
+        }
+
+        
+    
+    def fetch_uploads(self, user_id):
+        # columns = {"_id": 1, "userId": 0, "chainId": 1, "dateCreated": 1, "files": 1}
+        chains = self.chain_collection.find({"userId": user_id}).sort({"$natural": -1})
+        chains = [chain for chain in chains]
+        res = []
+        for chain in chains:
+            # printer.pprint(chain)
+            obj = chain.copy()
+            chat_obj = self.get_last_chat(obj["chainId"])
+            obj["lastChat"] = chat_obj
+            res.append(obj)
+
+        return res
+
