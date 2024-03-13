@@ -1,3 +1,5 @@
+from itertools import chain
+import time
 from flask import Flask, request, jsonify, session
 # from waitress import serve
 from flask_cors import CORS
@@ -126,6 +128,23 @@ def get_uploads():
     result = db.fetch_uploads(user_id)
 
     return jsonify(result)
+
+def delete_upload():
+    body = json.loads(request.data)
+    user_id = body.get("userId", False)
+    chain_id = body.get("chainId", False)
+    timestamp = body.get("dateDeleted", False)
+    if not user_id:
+        return jsonify({"error": "userId is required"})
+    if not chain_id:
+        return jsonify({"error": "chainId is required"})
+    if not timestamp:
+        return jsonify({"error": "timestamp is required"})
+
+    db = DBHandler()
+    res = db.delete_chain(user_id, chain_id, timestamp)
+
+    return jsonify(res)
     
 
 app.add_url_rule("/upload", "learn", learn, methods=["POST"])
@@ -134,6 +153,7 @@ app.add_url_rule("/signin", "handle_signin", handle_signin, methods=["POST"])
 app.add_url_rule("/chain", "get_chain_obj", get_chain_obj, methods=["POST"])
 app.add_url_rule("/chats", "get_chats", get_chats, methods=["GET"])
 app.add_url_rule("/uploads", "get_uploads", get_uploads, methods=["POST"])
+app.add_url_rule("/delete_upload", "delete_upload", delete_upload, methods=["POST"])
     
 
 if __name__ == '__main__':

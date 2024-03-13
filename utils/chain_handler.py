@@ -43,7 +43,8 @@ class ChainHandler:
             "userId": user_id,
             "chainId": chain_id,
             "dateCreated": timestamp,
-            "files": fileObjs
+            "files": fileObjs,
+            "deleted": False
         }
         chain_collection = client.banter.chains
         chain_collection.insert_one(obj)

@@ -61,8 +61,12 @@ class DBHandler():
     
     def fetch_uploads(self, user_id):
         # columns = {"_id": 1, "userId": 0, "chainId": 1, "dateCreated": 1, "files": 1}
-        chains = self.chain_collection.find({"userId": user_id}).sort({"$natural": -1})
+        chains = self.chain_collection.find({"userId": user_id, "deleted": False}).sort({"$natural": -1})
         chains = [chain for chain in chains]
+
+        return chains
+    
+        # Getting last chats disabled
         res = []
         for chain in chains:
             # printer.pprint(chain)
@@ -72,4 +76,16 @@ class DBHandler():
             res.append(obj)
 
         return res
+    
+    def delete_chain(self, user_id, chain_id, timestamp):
+        all_updates = {
+            "$set": {"deleted": True, "dateDeleted": timestamp}
+        }
+        chain = self.chain_collection.find_one({"chainId": chain_id, "userId": user_id})
+        if not chain:
+            return {"showError": "Permission to delete document denied!"}
+        
+        self.chain_collection.update_one({"chainId": chain_id, "userId": user_id}, all_updates)
+        return {"success": True}
+
 
