@@ -37,6 +37,7 @@ class DBHandler():
         else:
             chats = self.chat_collection.find({"chainId": chain_id})
         chats_list = [chat for chat in chats]
+        print(chats_list[-1])
 
         return chats_list
     
