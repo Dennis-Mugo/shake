@@ -1,5 +1,5 @@
 # Shake API
-shake is a python Flask RESTful API that provides access to an end-to-end (Retrieval Augmented Generation) application. It is built on langchain and openAI.
+shake is a python Flask RESTful API that provides access to an end-to-end (Retrieval Augmented Generation) application. It analyses pdf data provided by a user and gives responses based only on the pdf data. It is built on langchain and openAI.
 
 This README provides instructions on how to run the shake API Flask app.
 
